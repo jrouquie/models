@@ -166,7 +166,7 @@ that the paths can be either local or a path to GCS bucket.
 
 ## Google Cloud AI Platform
 
-The TensorFlow Object Detection API supports also supports training on Google
+The TensorFlow Object Detection API also supports training on Google
 Cloud AI Platform. This section documents instructions on how to train and
 evaluate your model using Cloud ML. The reader should complete the following
 prerequistes:

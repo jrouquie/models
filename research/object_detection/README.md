@@ -46,7 +46,7 @@ reasons:
 
 * Eager execution with new binaries makes debugging easy!
 
-Finally, if are an existing user of the Object Detection API we have retained
+Finally, if you are an existing user of the Object Detection API, we have retained
 the same config language you are familiar with and ensured that the
 TF2 training/eval binary takes the same arguments as our TF1 binaries.
 
