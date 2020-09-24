@@ -9,7 +9,7 @@ of the detector will look like the following:
 
 ![](img/oxford_pet.png)
 
-## Setting up a Project on Google Cloud
+## Set up a Project on Google Cloud
 
 To accelerate the process, we'll run training and evaluation on [Google Cloud
 ML Engine](https://cloud.google.com/ml-engine/) to leverage multiple GPUs. To
@@ -42,13 +42,13 @@ export YOUR_GCS_BUCKET=${YOUR_GCS_BUCKET}
 It is also possible to run locally by following
 [the running locally instructions](running_locally.md).
 
-## Installing TensorFlow and the TensorFlow Object Detection API
+## Install TensorFlow and the TensorFlow Object Detection API
 
 Please run through the [installation instructions](installation.md) to install
 TensorFlow and all it dependencies. Ensure the Protobuf libraries are
 compiled and the library directories are added to `PYTHONPATH`.
 
-## Getting the Oxford-IIIT Pets Dataset and Uploading it to Google Cloud Storage
+## Get the Oxford-IIIT Pets Dataset and Uploading it to Google Cloud Storage
 
 In order to train a detector, we require a dataset of images, bounding boxes and
 classifications. For this demo, we'll use the Oxford-IIIT Pets dataset. The raw
@@ -113,7 +113,7 @@ gsutil cp object_detection/data/pet_label_map.pbtxt gs://${YOUR_GCS_BUCKET}/data
 Please remember the path where you upload the data to, as we will need this
 information when configuring the pipeline in a following step.
 
-## Downloading a COCO-pretrained Model for Transfer Learning
+## Download a COCO-pretrained Model for Transfer Learning
 
 Training a state of the art object detector from scratch can take days, even
 when using multiple GPUs! In order to speed up training, we'll take an object
@@ -134,7 +134,7 @@ gsutil cp faster_rcnn_resnet101_coco_11_06_2017/model.ckpt.* gs://${YOUR_GCS_BUC
 Remember the path where you uploaded the model checkpoint to, as we will need it
 in the following step.
 
-## Configuring the Object Detection Pipeline
+## Configure the Object Detection Pipeline
 
 In the TensorFlow Object Detection API, the model parameters, training
 parameters and eval parameters are all defined by a config file. More details
@@ -164,7 +164,7 @@ gsutil cp object_detection/samples/configs/faster_rcnn_resnet101_pets.config \
     gs://${YOUR_GCS_BUCKET}/data/faster_rcnn_resnet101_pets.config
 ```
 
-## Checking Your Google Cloud Storage Bucket
+## Check Your Google Cloud Storage Bucket
 
 At this point in the tutorial, you should have uploaded the training/validation
 datasets (including label map), our COCO trained FasterRCNN finetune checkpoint and your job
@@ -186,7 +186,7 @@ the following:
 You can inspect your bucket using the [Google Cloud Storage
 browser](https://console.cloud.google.com/storage/browser).
 
-## Starting Training and Evaluation Jobs on Google Cloud ML Engine
+## Start Training and Evaluation Jobs on Google Cloud ML Engine
 
 Before we can start a job on Google Cloud ML Engine, we must:
 
@@ -232,7 +232,7 @@ gcloud ml-engine jobs submit training `whoami`_object_detection_pets_`date +%m_%
 Users can monitor and stop training and evaluation jobs on the [ML Engine
 Dashboard](https://console.cloud.google.com/mlengine/jobs).
 
-## Monitoring Progress with Tensorboard
+## Monitor Progress with Tensorboard
 
 You can monitor progress of the training and eval jobs by running Tensorboard on
 your local machine:
@@ -267,7 +267,7 @@ the training jobs are configured to go for much longer than is necessary for
 convergence.  To save money, we recommend killing your jobs once you've seen
 that they've converged.
 
-## Exporting the TensorFlow Graph
+## Export the TensorFlow Graph
 
 After your model has been trained, you should export it to a TensorFlow graph
 proto. First, you need to identify a candidate checkpoint to export. You can
@@ -286,17 +286,17 @@ command from `tensorflow/models/research/`:
 ```bash
 # From tensorflow/models/research/
 gsutil cp gs://${YOUR_GCS_BUCKET}/model_dir/model.ckpt-${CHECKPOINT_NUMBER}.* .
-python object_detection/export_inference_graph.py \
+python object_detection/exporter_main_v2.py \
     --input_type image_tensor \
     --pipeline_config_path object_detection/samples/configs/faster_rcnn_resnet101_pets.config \
-    --trained_checkpoint_prefix model.ckpt-${CHECKPOINT_NUMBER} \
+    --trained_checkpoint_dir model.ckpt-${CHECKPOINT_NUMBER} \
     --output_directory exported_graphs
 ```
 
 Afterwards, you should see a directory named `exported_graphs` containing the
 SavedModel and frozen graph.
 
-## Configuring the Instance Segmentation Pipeline
+## Configure the Instance Segmentation Pipeline
 
 Mask prediction can be turned on for an object detection config by adding
 `predict_instance_masks: true` within the `MaskRCNNBoxPredictor`. Other
